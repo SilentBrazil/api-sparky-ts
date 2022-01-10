@@ -1,30 +1,27 @@
-import axios from 'axios'
 import express from 'express'
 import helmet from 'helmet'
 import ChannelController from '../controller/ChannelController'
-import Connect from '../data/connection/connect'
+import { createPodcasts } from '../cron/PodcastCron'
+import FirebaseConnection from '../data/connection/FirebaseConnection'
+import Connect from '../data/connection/FirebaseConnection'
 import { ChannelRepository } from '../data/repositories/ChannelRepository'
-import { createFlow } from './routes'
+import { PodcastRoutes } from './routes/PodcastRoutes'
 
 
-const app = express()
+let app = express()
 
-const connect = new Connect()
-const channelRepository = new ChannelRepository(connect.initialize())
-const channelController = new ChannelController(channelRepository)
-
+//Firebase connection
+//const database = new FirebaseConnection().initialize();
+//const channelRepository = new ChannelRepository(database)
+//const channelController = new ChannelController(channelRepository)
 
 app.use(helmet())
-app.post('/flowpodcast', createFlow(channelController))
+//app.post('/flowpodcast', createFlow(channelController))
 
-app.get('/kritike', (req, res) => { })
-app.get('/prosa', (req, res) => { })
-app.get('/ciencia', (req, res) => { })
-app.get('/sport', (req, res) => { })
-app.get('/cometa', (req, res) => { })
+//app.use("/podcast",PodcastRoutes);
 
-app.listen(3000, () => {
-  console.log('🚀 Listening on port 3000')
-})
+app.listen(3000, () => console.log('\n\n== 🚀 Listening on port 3000 ==\n\n'))
+
+//createPodcasts();
 
 export default app

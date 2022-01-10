@@ -51,6 +51,8 @@ export function createFlow(controller) {
         views: data.items[0].statistics.viewCount,
         hosts_instagrams: ['', '']
       }
+      
+      console.log("Got here");
 
       const newChannel = await controller.create(response)
       console.log(newChannel)

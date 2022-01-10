@@ -1,0 +1,13 @@
+export const Podcasts = {
+    FLOW: "UC4ncvgh5hFr5O83MH7-jRJg",
+    VENUS: "UCTBhsXf_XRxk8w4rMj6WBOA",
+    KRITIKE:"UC1m1ZZfQYChRZ3aPI6SqZng",
+    CIENCIASEMFIM:"UC9djCiv4e85Kd8G--GWlcoQ",
+    ADERIVA:"UCS8Mv2IWgrOIV5u52GzDuRQ",
+    FLOWSPORTCLUB:"UC5-aueB1RqpUc-EeAjtx9Lw",
+    NOIR:"UC49AXYRJpDmPR5DEKFexdbw",
+    EXUGAGELO:"UCRB3ZyOtP7q6gaSQGsGfEaA",
+    COMETA:"UCGRO5N_Il8JlEayJkvnrY3A",
+    AVESSO:"UCOviqmq2zRaigBxZfiD_D-w",
+    PROSA:"UCSSRo6oW3osDXtISr1vOitw"
+}

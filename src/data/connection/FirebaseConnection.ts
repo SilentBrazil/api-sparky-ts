@@ -2,9 +2,10 @@ import { getFirestore } from 'firebase-admin/firestore'
 import admin, { ServiceAccount } from 'firebase-admin'
 
 import privateKey from '../../../private_key.json'
+import { Connection } from './Connection'
 
 
-class Connect {
+class FirebaseConnect implements Connection {
   initialize() {
     const app = admin.initializeApp({
       credential: admin.credential.cert(privateKey as ServiceAccount)
@@ -15,4 +16,4 @@ class Connect {
   }
 }
 
-export default Connect
+export default FirebaseConnect

@@ -1,0 +1,18 @@
+pegar os usuários e emblemas
+
+Fazer chamada para api do podcasts
+(ultimos dez videos)
+(ordenar por numero de inscritos)
+(Buscar se esta em live ou nao e trazer link da live)
+
+Rota de configuraçao dos podcasts 
+- Criar um novo podcast
+- Editar e apagar
+
+Rota para pegar as inforçoes do canal de cortes
+- Uma geral
+- Uma pro canal especifico 
+
+//Lista de convidados
+
+//Rota das informaçoes do hosts
