@@ -16,12 +16,7 @@ export class PodcastController{
         try{
             const ids : string[] = (<any>req.query.id)?.split(",");
 
-            let podcasts : Podcast[] = [];
-
-            if(!ids)
-                podcasts = await this.repository.get([]);
-            else
-                podcasts = await this.repository.get(ids);
+            const podcasts = ids ? await this.repository.get(ids) : await this.repository.get([]);
 
             if(podcasts.length == 0){
                 const error : Error = { status : 404, errorMessage: 'Podcast(s) not found'};
