@@ -1,19 +1,20 @@
-import { getFirestore } from 'firebase-admin/firestore'
+import { Firestore, getFirestore } from 'firebase-admin/firestore'
 import admin, { ServiceAccount } from 'firebase-admin'
-
+import { IConnection } from './IConnection'
 import privateKey from '../../../private_key.json'
-import { Connection } from './Connection'
 
+export class FirebaseConnection implements IConnection{
 
-class FirebaseConnect implements Connection {
-  initialize() {
+  private database : Firestore;
+
+  constructor(){
     const app = admin.initializeApp({
       credential: admin.credential.cert(privateKey as ServiceAccount)
     })
-    const db = getFirestore(app)
+    this.database = getFirestore(app);
+  }
 
-    return db
+  public connect() : Firestore{
+    return this.database;
   }
 }
-
-export default FirebaseConnect

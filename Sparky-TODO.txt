@@ -1,0 +1,23 @@
+Controller
+    - User
+        - (GET) return flows' user profile data and emblems
+
+    - Podcast
+        - (GET) given a podcast_id, return its data, 
+        with all its videos, return last 10 cutting videos, and if its in live. 
+
+        - (POST) creates a new podcast given a ytId
+
+        - (PUT) edit a podcast given a podcast_id
+
+        - (GET/list) given a list of podcast_id, return the podcast's data,
+        last 10 videos, and if its in live. Ordered by subscribers.
+
+    - Cutting
+        - (GET) given a podcast_id, return its cutting channel data,
+        with all its videos.
+
+        - (GET/list) given a list of podcast_id, return the cutting channel data,
+        last 10 videos. Ordered by subscribers.
+
+        - (PUT) edit a cutting channel given a podcast_id

@@ -1,19 +1,24 @@
-import { CollectionGroup, DocumentData } from "firebase-admin/firestore";
-import { collections } from "../../config/Collections";
+import { CollectionGroup, CollectionReference, DocumentData, Firestore } from "firebase-admin/firestore";
+import { autoInjectable, inject, injectable, singleton } from "tsyringe";
 import { Podcast } from "../../models/Podcast";
-import { Connection } from "../connection/Connection";
-import { Repository } from "./Repository";
+import { collections } from "../../shared/config/collections";
+import { FirebaseConnection } from "../connection/FirebaseConnection";
+import { IConnection } from "../connection/IConnection";
+import { IRepository } from "./IRepository";
 
-export class PodcastRepository implements Repository<Podcast>{
+@autoInjectable()
+export class PodcastRepository implements IRepository<Podcast>{
 
-    private db : any;
+    private collection : CollectionReference;
 
-    public constructor(db){
-        this.db = db.collection(collections.podcast);
+    public constructor(
+        db: FirebaseConnection){
+        this.collection = db.connect().collection(collections.podcast);
     }
 
     async save(e: Podcast) : Promise<Podcast> {
-        return this.db.add(e);
+        this.collection.add(e);
+        return e;
     }
 
     get(id: string): Promise<Podcast> | Promise<Podcast[]> {
