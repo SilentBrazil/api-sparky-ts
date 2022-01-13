@@ -1,4 +1,5 @@
-import { CollectionGroup, CollectionReference, DocumentData, Firestore } from "firebase-admin/firestore";
+import { collection, query } from "@firebase/firestore";
+import { CollectionGroup, CollectionReference, DocumentData, Firestore, QuerySnapshot } from "firebase-admin/firestore";
 import { autoInjectable, inject, injectable, singleton } from "tsyringe";
 import { Podcast } from "../../models/Podcast";
 import { collections } from "../../shared/config/collections";
@@ -17,12 +18,20 @@ export class PodcastRepository implements IRepository<Podcast>{
     }
 
     async save(e: Podcast) : Promise<Podcast> {
-        this.collection.add(e);
+        this.collection.doc(e.ytId).set(e);
         return e;
     }
 
-    get(id: string): Promise<Podcast> | Promise<Podcast[]> {
-        throw new Error("Method not implemented.");
+    async get(ytId: string[]): Promise<Podcast[]> {
+        let podcast : Podcast[] = [];
+
+        const result = ytId.length == 0
+            ? await this.collection.get()
+            : await this.collection.where('ytId','in',ytId).get();
+
+        result.forEach((e) => podcast.push(<Podcast>e.data()));
+
+        return podcast;
     }
 
 }

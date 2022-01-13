@@ -1,9 +1,9 @@
-import axios from "axios";
 import { Request, Response } from "express";
-import { injectable, inject, autoInjectable } from "tsyringe";
+import { autoInjectable } from "tsyringe";
 import { PodcastRepository } from "../data/repositories/PodcastRepository";
+import { Error } from "../models/Error";
 import { Podcast } from "../models/Podcast";
-import { youtubeRoutes } from "../shared/config/apiRoutes";
+import { podcastService } from "../services/podcastService";
 
 @autoInjectable()
 export class PodcastController{
@@ -12,50 +12,48 @@ export class PodcastController{
         public repository: PodcastRepository
     ){}
 
+    public async getPodcast(req: Request,res: Response) {
+        try{
+            const ids : string[] = (<any>req.query.id)?.split(",");
 
-    public getPodcast(req: Request,res: Response):void{
-       res.send("Hello world!")
-    }
+            let podcasts : Podcast[] = [];
 
-    public getPodcastList(req: Request,res: Response):void{
-        
-    }
-    
-    public async createPodcast(req : Request,res : Response) {
-        const id = req.params.ytId;
-        //console.log("Got here",this.repository);
+            if(!ids)
+                podcasts = await this.repository.get([]);
+            else
+                podcasts = await this.repository.get(ids);
 
-        console.log("Id",id);
-        try {
-            // const data : any = await axios.get(
-            //     youtubeRoutes.channels,
-            //     {
-            //         params: {
-            //             key: process.env.API_KEY_YOUTUBE,
-            //             part: 'snippet, statistics',
-            //             id: id
-            //         }
-            //     }
-            // )
-
-            // console.log("Data returned ",data.items);
-
-            const response : Podcast = {
-                name : "TesteNOVOPODCAST",
-                icon_url : "icon",
-                subscribers : 1,
-                hosts_instagrams : ['',''],
-                views : 67,
-                ytId: ""
+            if(podcasts.length == 0){
+                const error : Error = { status : 404, errorMessage: 'Podcast(s) not found'};
+                return res.status(error.status).json(error);
             }
 
-            console.log("Got here",this.repository);
-            await this.repository.save(response);
-            return res.status(201).json(response);
-        } catch (e) {
-            console.log("Failed on id ",id);
-            console.log("Error :: "+e);
+            return res.status(200).json(podcasts);
+        }catch(e){
+            console.log(e);
         }
-        res.status(400).json("Error");
+
+        const error : Error = { status: 500, errorMessage : `There was an error while fetching your data`};
+
+        return res.status(error.status).json(error);
+    }
+
+    public async createPodcast(req : Request,res : Response) {
+        const id = req.params.ytId;
+
+        try {
+
+            const podcast = await podcastService.getPodcast(id);
+
+            await this.repository.save(podcast);
+
+            return res.status(201).json(podcast);
+        } catch (e) {
+            console.log(e);
+        }
+
+        const error : Error = { status: 500, errorMessage : `There was an error creating podcast with id ${id}`};
+
+        return res.status(error.status).json(error);
     }
 }
