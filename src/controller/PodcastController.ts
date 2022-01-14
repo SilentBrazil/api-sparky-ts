@@ -2,21 +2,20 @@ import { Request, Response } from "express";
 import { autoInjectable } from "tsyringe";
 import { PodcastRepository } from "../data/repositories/PodcastRepository";
 import { Error } from "../models/Error";
-import { Podcast } from "../models/Podcast";
 import { podcastService } from "../services/podcastService";
 
 @autoInjectable()
 export class PodcastController{
 
     public constructor (
-        public repository: PodcastRepository
+        private podcastRepository: PodcastRepository
     ){}
 
     public async getPodcast(req: Request,res: Response) {
         try{
             const ids : string[] = (<any>req.query.id)?.split(",");
 
-            const podcasts = ids ? await this.repository.get(ids) : await this.repository.get([]);
+            const podcasts = ids ? await this.podcastRepository.get(ids) : await this.podcastRepository.get([]);
 
             if(podcasts.length == 0){
                 const error : Error = { status : 404, errorMessage: 'Podcast(s) not found'};
@@ -39,8 +38,8 @@ export class PodcastController{
         try {
 
             const podcast = await podcastService.getPodcast(id);
-
-            await this.repository.save(podcast);
+            
+            await this.podcastRepository.save(podcast);
 
             return res.status(201).json(podcast);
         } catch (e) {

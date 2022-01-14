@@ -1,6 +1,6 @@
 export interface Video{
     ytId:string,
-    channelId: string,
+    podcastId: string,
     title: string,
     description: string,
     thumbnail_url:string,

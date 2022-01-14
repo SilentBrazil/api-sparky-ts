@@ -6,8 +6,7 @@ export interface Podcast{
     icon_url: string,
     subscribers: number,
     views: number,
-    host:Host[],
-    videos:Video[]
+    host:Host[]
 }
 
 export interface Host{

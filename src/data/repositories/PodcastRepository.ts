@@ -17,6 +17,11 @@ export class PodcastRepository implements IRepository<Podcast>{
         this.collection = db.connect().collection(collections.podcast);
     }
 
+    async update(e: Podcast): Promise<Podcast> {
+        await this.collection.doc(e.ytId).update({...e}); 
+        return e;   
+    }
+
     async save(e: Podcast) : Promise<Podcast> {
         this.collection.doc(e.ytId).set(e);
         return e;
@@ -26,8 +31,8 @@ export class PodcastRepository implements IRepository<Podcast>{
         let podcast : Podcast[] = [];
 
         const result = ytId.length == 0
-            ? await this.collection.get()
-            : await this.collection.where('ytId','in',ytId).get();
+            ? await this.collection.orderBy('subscribers','desc').get()
+            : await this.collection.where('ytId','in',ytId).orderBy('subscribers','desc').get();
 
         result.forEach((e) => podcast.push(<Podcast>e.data()));
 
