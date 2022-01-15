@@ -1,14 +1,17 @@
 import { Request, Response } from "express";
 import { autoInjectable } from "tsyringe";
 import { PodcastRepository } from "../data/repositories/PodcastRepository";
+import { VideoRepository } from "../data/repositories/VideoRepository";
 import { Error } from "../models/Error";
+import { Video } from "../models/Video";
 import { podcastService } from "../services/podcastService";
 
 @autoInjectable()
 export class PodcastController{
 
     public constructor (
-        private podcastRepository: PodcastRepository
+        private podcastRepository: PodcastRepository,
+        private videoRepository : VideoRepository
     ){}
 
     public async getPodcast(req: Request,res: Response) {
@@ -22,7 +25,19 @@ export class PodcastController{
                 return res.status(error.status).json(error);
             }
 
-            return res.status(200).json(podcasts);
+            const podcastPromises = podcasts.map(async (p) => {
+                let videos : Video[];
+                if (podcasts.length == 1)
+                    videos = await this.videoRepository.get(p.ytId);
+                else
+                    videos = await this.videoRepository.get(p.ytId, 10);
+
+                return { ...p, videos: videos };
+            });
+
+            const result = await Promise.all(podcastPromises);
+
+            return res.status(200).json(result);
         }catch(e){
             console.log(e);
         }
@@ -36,7 +51,6 @@ export class PodcastController{
         const id = req.params.ytId;
 
         try {
-
             const podcast = await podcastService.getPodcast(id);
             
             await this.podcastRepository.save(podcast);

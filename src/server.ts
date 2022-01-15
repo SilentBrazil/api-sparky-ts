@@ -9,7 +9,7 @@ let app = express()
 app.use(helmet())
 
 app.use("/podcast",PodcastRoutes);
-app.use("/video",VideoRoutes);
+//app.use("/video",VideoRoutes);
 
 app.listen(3000, () => console.log('\n\n== 🚀 Listening on port 3000 ==\n\n'));
 
