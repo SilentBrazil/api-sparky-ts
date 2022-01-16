@@ -1,4 +1,5 @@
 export const collections = {
     podcast : "podcast",
-    cutting: "cutting"
+    cutting: "cutting",
+    video: "video"
 }
